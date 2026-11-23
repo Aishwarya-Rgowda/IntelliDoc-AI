@@ -23,3 +23,30 @@ $('duplicate-tool').onclick=()=>{if(docs.length<2)return showOutput('Duplicate f
 $('quality-tool').onclick=()=>{if(!docs.length)return showOutput('Quality insights','<p>Add a document to inspect it.</p>');const html=docs.map(d=>{const w=words(d.text),unique=new Set(w).size,repeat=w.length?unique/w.length:0;const flags=[];if(w.length<40)flags.push('Very short or mostly empty text');if(w.length>30000)flags.push('Unusually long extracted text');if(repeat<.18)flags.push('Low vocabulary variety / repetitive text');return '<div class="insight-item"><b>'+esc(d.name)+'</b><small>'+(flags.length?flags.join(' · '):'No simple text-quality flags')+' · '+w.length+' words</small></div>';}).join('');showOutput('Document quality insights',html+'<p class="output-content">These are lightweight text-quality signals, not proof of fraud, authenticity or document correctness.</p>');};
 function goWorkspace(){$('workspace').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('file-input').focus({preventScroll:true}),500);}['start-btn','hero-start','bottom-start'].forEach(id=>$(id).onclick=goWorkspace);
 $('menu-btn').onclick=()=>document.querySelector('.nav nav').classList.toggle('open');
+
+/* Multi-section workspace navigation */
+(function(){
+ const tabs=[...document.querySelectorAll('.workspace-tab')];
+ const library=document.querySelector('.panel.library'), assistant=document.querySelector('.panel.assistant');
+ const stats=document.querySelector('.stats'), tools=document.querySelector('.tools-grid'), toolOutput=document.querySelector('#tool-output');
+ const featureHead=document.querySelector('.feature-head'), admin=document.querySelector('.admin-note');
+ const guide=document.createElement('section');guide.className='guide-panel';guide.id='guide-panel';
+ guide.innerHTML='<div class="eyebrow">A QUICK TOUR</div><h3 style="font:800 21px Manrope;margin:9px 0">Your documents, made easier.</h3><p style="font-size:11px;color:#83918b;line-height:1.8;max-width:650px">IntelliDoc AI is a browser-based document workspace. Add readable files, find relevant passages, create quick extractive summaries and review simple text signals.</p><div class="guide-grid"><div class="guide-step"><span>01</span><b>Upload documents</b><p>Add PDF, DOCX or TXT files. They are read locally in this browser.</p></div><div class="guide-step"><span>02</span><b>Ask and explore</b><p>Search your files with a question and inspect the matching passages and source names.</p></div><div class="guide-step"><span>03</span><b>Review insights</b><p>Generate short extractive summaries, compare text similarity and check basic quality signals.</p></div></div><p style="font-size:9px;color:#9aa49f;margin-top:17px">Demo note: this version does not provide hosted AI chat, account login, cloud storage or OCR. Refreshing the page clears the temporary library.</p>';
+ document.querySelector('.workspace').append(guide);
+ function show(view){
+  tabs.forEach(t=>{const on=t.dataset.view===view;t.classList.toggle('active',on);t.setAttribute('aria-selected',String(on));});
+  const set=(el,on)=>el&&el.classList.toggle('workspace-view-hidden',!on);
+  set(stats,view==='overview');
+  set(library,view==='overview'||view==='library');
+  set(assistant,view==='overview'||view==='assistant');
+  set(featureHead,view==='overview'||view==='insights');
+  set(tools,view==='overview'||view==='insights');
+  set(toolOutput,view==='overview'||view==='insights');
+  set(admin,view==='overview'||view==='guide');
+  guide.classList.toggle('visible',view==='guide');
+  if(view==='library'||view==='assistant'||view==='insights')set(stats,false);
+  if(view==='guide')set(stats,false);
+ }
+ tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.view)));
+ show('overview');
+})();
