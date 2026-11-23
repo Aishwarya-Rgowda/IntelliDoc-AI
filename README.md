@@ -13,6 +13,7 @@ A learning-friendly document intelligence web application built with FastAPI, SQ
 - Initial retrieval-service unit tests and GitHub Actions test workflow
 - File extension and size checks; random storage filenames
 - Keyword-based passage retrieval with source references
+- Per-document extractive summaries with word-count metadata
 - Responsive browser interface and interactive API docs
 
 ## Run locally
@@ -79,6 +80,7 @@ Set `OPENAI_MODEL=gpt-4.1-mini` (or another model available to your API account)
 | GET | /api/documents | List your documents |
 | DELETE | /api/documents/{id} | Delete your document |
 | POST | /api/questions/ask | Retrieve relevant passages |
+| POST | /api/documents/{id}/summarize | Create an extractive summary of your document |
 | GET | /api/health | Health check |
 
 Protected endpoints require `Authorization: Bearer <token>`.
@@ -95,6 +97,6 @@ The educational prototype stores the access token in localStorage. A production 
 ## Current limitations / roadmap
 - Scanned PDF OCR is available as an optional local feature. Install the packages in `requirements-ocr.txt` and the Tesseract application for your operating system; OCR is not included in the default install.
 - Optional local sentence embeddings improve passage retrieval. Optional OpenAI-backed grounded answer generation is available when configured; otherwise the app returns extractive passages.
-- Next: persistent vector indexing, summarization, duplicate/anomaly detection, broader automated tests, database migrations and deployment hardening.
+- Next: persistent vector indexing, abstractive summarization, duplicate/anomaly detection, broader automated tests, database migrations and deployment hardening.
 
 Never commit your real .env, uploaded documents, database, API keys or production secrets. Uploaded files are not served as public static files.
