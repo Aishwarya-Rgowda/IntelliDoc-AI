@@ -113,7 +113,12 @@ async function openPdfFile(file){if(!window.pdfjsLib)throw Error('PDF reader lib
 function safeBaseName(name){return name.replace(/\.[^.]+$/,'')}
 function triggerDownload(blob,name){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.style.display='none';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}
 let selectedWordPdf=null,selectedJpgPdf=null,selectedImagesForPdf=[],selectedFormatImage=null;
-$('pdf-word-input').onchange=e=>{selectedWordPdf=e.target.files[0]||null;$('pdf-word-convert').disabled=!selectedWordPdf;setConvertStatus('pdf-word-status',selectedWordPdf?'Selected: '+selectedWordPdf.name+' · Click Convert & Download Word.':'Choose a PDF file.')};
+function selectWordPdf(file){selectedWordPdf=file||null;$('pdf-word-convert').disabled=!selectedWordPdf;setConvertStatus('pdf-word-status',selectedWordPdf?'Selected: '+selectedWordPdf.name+' · Ready to convert.':'No file selected')}
+$('pdf-word-input').onchange=e=>selectWordPdf(e.target.files[0]);
+const wordDrop=$('pdf-word-input').closest('.pdfword-upload');
+['dragenter','dragover'].forEach(type=>wordDrop.addEventListener(type,e=>{e.preventDefault();wordDrop.classList.add('is-dragging')}));
+['dragleave','drop'].forEach(type=>wordDrop.addEventListener(type,e=>{e.preventDefault();wordDrop.classList.remove('is-dragging')}));
+wordDrop.addEventListener('drop',e=>{const file=[...e.dataTransfer.files].find(x=>x.type==='application/pdf'||/\\.pdf$/i.test(x.name));if(file)selectWordPdf(file);else setConvertStatus('pdf-word-status','Please drop a PDF file.')});
 async function makeVisualDocx(pages){
  if(!window.JSZip)throw Error('Word document library did not load. Refresh the page and try again.');
  const zip=new JSZip(),body=[],rels=[];
