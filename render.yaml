@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: intellidoc-ai-api
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:////var/data/intellidoc.db
+      - key: UPLOAD_DIR
+        value: /var/data/uploads
+      - key: MAX_UPLOAD_MB
+        value: "10"
+      - key: CORS_ORIGINS
+        value: https://aishwarya-rgowda.github.io
+      - key: ENABLE_SEMANTIC_SEARCH
+        value: "false"
+    disk:
+      name: intellidoc-data
+      mountPath: /var/data
+      sizeGB: 1
