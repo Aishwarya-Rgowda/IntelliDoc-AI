@@ -32,3 +32,12 @@ class QuestionRequest(BaseModel):
 class AnswerResponse(BaseModel):
     answer: str
     sources: list[dict]
+
+
+class SummaryResponse(BaseModel):
+    document_id: int
+    filename: str
+    summary: str
+    original_word_count: int
+    summary_word_count: int
+    method: str = "extractive"
