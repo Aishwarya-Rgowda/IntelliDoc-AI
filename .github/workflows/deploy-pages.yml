@@ -1,7 +1,7 @@
 name: Deploy IntelliDoc AI demo to GitHub Pages
 on:
   push:
-    branches: ["feature/intellidoc-foundation"]
+    branches: ["main"]
     paths:
       - "docs/**"
       - ".github/workflows/deploy-pages.yml"
