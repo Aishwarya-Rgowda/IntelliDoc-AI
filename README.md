@@ -59,6 +59,16 @@ pip install -r requirements-ai.txt
 
 Then set `ENABLE_SEMANTIC_SEARCH=true` in your `.env` file and restart the server. The first semantic query downloads the `all-MiniLM-L6-v2` model and may take longer. Model inference runs locally after download. If the optional dependency or model is unavailable, retrieval falls back to keyword matching. This is semantic passage retrieval; the current answer is still extractive and does not generate new answers with an LLM.
 
+## Grounded LLM answers (optional)
+
+The question endpoint first retrieves relevant passages from the signed-in user's documents. To enable generated, source-grounded answers, install the optional AI dependencies and set `OPENAI_API_KEY` in your local `.env` file:
+
+```powershell
+pip install -r requirements-ai.txt
+```
+
+Set `OPENAI_MODEL=gpt-4.1-mini` (or another model available to your API account). The key stays on the backend and must never be placed in frontend JavaScript or committed to Git. Requests use `store=False`. If the key is absent or the provider is unavailable, the app safely falls back to extractive passage results. API usage may incur charges. Retrieved document text is sent to the configured provider when this feature is enabled; do not upload confidential documents unless you are permitted to share them with that provider.
+
 ## API
 | Method | Endpoint | Purpose |
 |---|---|---|
@@ -84,7 +94,7 @@ The educational prototype stores the access token in localStorage. A production 
 
 ## Current limitations / roadmap
 - Scanned PDF OCR is available as an optional local feature. Install the packages in `requirements-ocr.txt` and the Tesseract application for your operating system; OCR is not included in the default install.
-- Optional local sentence embeddings improve passage retrieval when enabled; full LLM-generated RAG answers are not implemented yet.
-- Next: persistent vector indexing, grounded LLM RAG, summarization, duplicate/anomaly detection, automated tests, database migrations and deployment hardening.
+- Optional local sentence embeddings improve passage retrieval. Optional OpenAI-backed grounded answer generation is available when configured; otherwise the app returns extractive passages.
+- Next: persistent vector indexing, summarization, duplicate/anomaly detection, broader automated tests, database migrations and deployment hardening.
 
 Never commit your real .env, uploaded documents, database, API keys or production secrets. Uploaded files are not served as public static files.
