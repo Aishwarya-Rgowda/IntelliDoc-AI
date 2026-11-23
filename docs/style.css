@@ -68,3 +68,20 @@
 .converter-pick{font-size:10px;padding:11px 15px}
 .converter-status{min-height:27px;overflow-wrap:anywhere}
 @media(max-width:720px){.converter-grid{grid-template-columns:1fr}.converter-card p{min-height:0}}
+
+/* iLovePDF-inspired searchable toolbox */
+.toolbox-controls{position:sticky;top:67px;z-index:4;margin:0 0 22px;padding:13px 0 12px;background:rgba(245,246,250,.96);backdrop-filter:blur(12px)}
+.toolbox-search{height:52px;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border:1px solid #e6e3f7;border-radius:13px;box-shadow:0 7px 22px rgba(78,62,150,.07)}
+.toolbox-search>span{font-size:25px;color:#7763df}.toolbox-search input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:500 13px 'DM Sans';color:#293047}.toolbox-search input::placeholder{color:#a5a5b5}
+.toolbox-search kbd{padding:4px 7px;border:1px solid #e9e8f0;border-radius:5px;background:#fafaff;color:#9694a7;font-size:9px}
+.toolbox-search button{display:none;align-items:center;justify-content:center;width:27px;height:27px;border:0;border-radius:8px;background:#f0edff;color:#6958d6;font-size:19px;cursor:pointer}
+.toolbox-filters{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.tool-filter{display:inline-flex;align-items:center;gap:7px;border:1px solid #e7e5f3;border-radius:30px;padding:9px 15px;background:#fff;color:#6c7083;font:700 10px 'DM Sans';cursor:pointer;transition:.18s}
+.tool-filter:hover{border-color:#a99bf0;color:#6554d5}.tool-filter.active{border-color:transparent;background:linear-gradient(110deg,#6758e8,#8b58e8);color:white;box-shadow:0 5px 14px #6c5ce533}
+.toolbox-result-count{margin:10px 2px 0;color:#9699a8;font-size:9px}
+.converter-card[hidden],.converter-grid[hidden],.tool-category-title[hidden]{display:none!important}
+.converter-card{overflow:hidden}.converter-card:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7664eb,#a27af1);opacity:.75}
+.converter-card:nth-child(4n+2):before{background:linear-gradient(90deg,#4d9ee8,#73c7ec)}.converter-card:nth-child(4n+3):before{background:linear-gradient(90deg,#39b78b,#8bd9b8)}.converter-card:nth-child(4n):before{background:linear-gradient(90deg,#f1ad54,#f5d184)}
+.converter-card .converter-pick{border-radius:9px;box-shadow:0 4px 12px #6856d922}.converter-card .converter-action{border-radius:9px;background:linear-gradient(105deg,#6656df,#875be8);box-shadow:0 5px 13px #6856d922}
+html{min-height:100%;overflow-y:auto;scroll-behavior:smooth}body{min-height:100vh;overflow-x:hidden;overflow-y:auto}.app-shell,.main-area,.page-wrap{min-height:100vh;height:auto;overflow:visible}.page.active{min-height:calc(100vh - 90px);overflow:visible}
+@media(max-width:720px){.toolbox-controls{top:58px;padding:10px 0;background:rgba(245,246,250,.97)}.toolbox-search{height:48px;padding:0 12px}.toolbox-search kbd{display:none}.tool-filter{padding:8px 12px;font-size:9px}.toolbox-filters{gap:7px}.toolbox-result-count{font-size:8px}}
