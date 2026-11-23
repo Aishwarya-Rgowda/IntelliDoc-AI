@@ -10,3 +10,14 @@
 .suggestion-grid button{line-height:1.5;min-height:42px}
 .feature-pill{white-space:nowrap}
 @media(max-width:520px){.suggestion-grid{grid-template-columns:1fr}.chat-context{display:none}.chat-bubble{max-width:100%}}
+
+
+/* Free on-device AI assistant */
+.local-ai-banner{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 18px;background:linear-gradient(110deg,#f7f5ff,#f4f9ff);border-bottom:1px solid #eceaf8}
+.local-ai-copy b,.local-ai-copy small{display:block}
+.local-ai-copy b{font-size:10px;color:#5145a5}
+.local-ai-copy small{font-size:8px;color:#858da0;line-height:1.6;margin-top:4px}
+.local-ai-banner .primary-btn{white-space:nowrap;padding:10px 13px}
+.send-btn:disabled,.primary-btn:disabled{opacity:.55;cursor:wait;transform:none}
+.chat-bubble.assistant .source{white-space:normal}
+@media(max-width:520px){.local-ai-banner{align-items:flex-start;flex-direction:column}.local-ai-banner .primary-btn{width:100%}}
