@@ -87,7 +87,7 @@ async function ask(q){
   let answer='';
   if(isSummary&&!best.length){answer=ds.map(d=>sentences(d.text).slice(0,5).map(s=>'• '+s).join('\n')).join('\n\n')}
   else answer=best.length?best.map(x=>'“'+x.s+'”').join('\n\n'):'I couldn’t find a close text match. Try loading the free local AI above for more flexible, natural-language answers, or rephrase using a topic from your document.';
-  showAssistantAnswer(history,answer,ds.length?[{name:[...new Set(best.map(x=>x.name))].join(', ')}]:[]);
+  showAssistantAnswer(history,answer,best.length?[{name:[...new Set(best.map(x=>x.name))].join(', ')}]:[]);
  }
  history.scrollTop=history.scrollHeight;$('question').value='';$('ask-btn').disabled=false;log('Assistant message',query);
 }
