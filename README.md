@@ -8,7 +8,7 @@ A learning-friendly document intelligence web application built with FastAPI, SQ
 - Registration and login with Argon2 password hashing
 - Signed JWT bearer tokens with expiry
 - User-scoped document access
-- PDF, DOCX and TXT text extraction
+- PDF, DOCX and TXT text extraction\n- Optional OCR fallback for scanned PDFs (requires Tesseract plus `pip install -r requirements-ocr.txt`)\n- Initial retrieval-service unit tests and GitHub Actions test workflow
 - File extension and size checks; random storage filenames
 - Keyword-based passage retrieval with source references
 - Responsive browser interface and interactive API docs
@@ -19,7 +19,7 @@ Python 3.10+ recommended.
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 Copy-Item .env.example .env
 ```
 
@@ -31,7 +31,7 @@ uvicorn app.main:app --reload
 
 Open http://127.0.0.1:8000. API documentation: http://127.0.0.1:8000/docs.
 
-## API
+## Optional OCR for scanned PDFs\n\nInstall the system Tesseract OCR application first, then install the Python extras:\n\n```powershell\npip install -r requirements-ocr.txt\n```\n\nThe backend tries normal PDF text extraction first and uses OCR only when no text is found. OCR language defaults to the Tesseract installation defaults.\n\n## Run tests\n\n```powershell\npytest -q\n```\n\n## API
 | Method | Endpoint | Purpose |
 |---|---|---|
 | POST | /api/auth/register | Create account |
@@ -55,7 +55,7 @@ Protected endpoints require `Authorization: Bearer <token>`.
 The educational prototype stores the access token in localStorage. A production system should prefer secure HttpOnly/SameSite cookies, HTTPS, refresh-token rotation, rate limiting, CSRF protection where applicable, and managed secrets.
 
 ## Current limitations / roadmap
-- Scanned PDF OCR is not implemented; text-based PDFs work.
+- Scanned PDF OCR is available as an optional local feature. Install the packages in `requirements-ocr.txt` and the Tesseract application for your operating system; OCR is not included in the default install.
 - Q&A currently retrieves relevant passages; it does not yet use embeddings, an LLM or a full RAG pipeline.
 - Next: OCR, semantic embeddings/vector search, grounded RAG, summarization, duplicate/anomaly detection, automated tests, database migrations and deployment hardening.
 
