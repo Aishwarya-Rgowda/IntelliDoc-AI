@@ -8,7 +8,7 @@ def summarize_text(text: str, max_sentences: int = 5) -> tuple[str, int, int]:
     """Create a concise extractive summary by ranking sentences by term importance."""
     sentences = [
         part.strip()
-        for part in re.split(r"(?<=[.!?])\\s+|\\n+", text or "")
+        for part in re.split(r"(?<=[.!?])\s+|\n+", text or "")
         if len(part.strip()) > 20
     ]
     original_words = len((text or "").split())
