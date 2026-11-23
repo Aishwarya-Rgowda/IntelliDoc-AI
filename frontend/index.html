@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IntelliDoc AI</title><link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header><div class="brand">✦ IntelliDoc <span>AI</span></div><div id="account" class="muted">Private document workspace</div></header>
+<main>
+<section id="auth" class="card auth-card">
+<div class="eyebrow">YOUR DOCUMENT INTELLIGENCE SPACE</div><h1>Make your documents<br><span>work smarter.</span></h1>
+<p class="muted">Create an account or sign in to upload documents and ask questions about their contents.</p>
+<div class="tabs"><button class="tab active" data-mode="login">Sign in</button><button class="tab" data-mode="register">Create account</button></div>
+<form id="auth-form"><div id="name-wrap" class="hidden"><label>Full name</label><input id="name" autocomplete="name" placeholder="Your name"></div><label>Email</label><input id="email" type="email" required autocomplete="email" placeholder="you@example.com"><label>Password</label><input id="password" type="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters"><button class="primary full" type="submit" id="auth-submit">Sign in</button></form><p id="auth-message" class="message"></p>
+</section>
+<section id="workspace" class="hidden">
+<div class="welcome"><div><div class="eyebrow">WORKSPACE</div><h1>Your knowledge, <span>connected.</span></h1><p class="muted">Upload a file, then ask questions grounded in its text.</p></div><button id="logout" class="secondary">Sign out</button></div>
+<div class="grid">
+<article class="card"><div class="section-head"><div><div class="eyebrow">01 / LIBRARY</div><h2>Upload documents</h2></div><div class="icon">↥</div></div><p class="muted small">PDF, DOCX or TXT · Maximum 10 MB</p><form id="upload-form"><input id="file" type="file" accept=".pdf,.docx,.txt" required><button class="primary full">Add to library</button></form><p id="upload-message" class="message"></p><div id="documents" class="documents"></div></article>
+<article class="card"><div class="section-head"><div><div class="eyebrow">02 / ASK</div><h2>Talk to your files</h2></div><div class="icon">✧</div></div><p class="muted small">Answers are retrieved from matching passages in your own documents.</p><form id="question-form"><label>Your question</label><textarea id="question" rows="4" required placeholder="What are the key points in my document?"></textarea><label>Search scope</label><select id="scope"><option value="">All my documents</option></select><button class="primary full">Find an answer</button></form><div id="answer" class="answer hidden"></div></article>
+</div><p class="footnote">Your documents are private to your account. This starter uses local text retrieval, not a hosted generative AI model.</p>
+</section>
+</main><script src="/static/app.js"></script>
+</body></html>
