@@ -15,6 +15,8 @@ A learning-friendly document intelligence web application built with FastAPI, SQ
 - Keyword-based passage retrieval with source references
 - Per-document extractive summaries with word-count metadata
 - Exact and near-duplicate detection scoped to the signed-in user's documents
+- Document-quality anomaly warnings (short, empty, unusually long or corrupted-looking extraction)
+- Optional admin dashboard protected by an explicit email allowlist
 - Responsive browser interface and interactive API docs
 
 ## Run locally
