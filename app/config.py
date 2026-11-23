@@ -12,4 +12,5 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'intellidoc.db'}")
 UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", str(BASE_DIR / "uploads")))
 MAX_UPLOAD_MB = int(os.getenv("MAX_UPLOAD_MB", "10"))
+ENABLE_SEMANTIC_SEARCH = os.getenv("ENABLE_SEMANTIC_SEARCH", "false").lower() in {"1", "true", "yes"}
 ALLOWED_EXTENSIONS = {".pdf", ".txt", ".docx"}
