@@ -114,22 +114,18 @@ function safeBaseName(name){return name.replace(/\.[^.]+$/,'')}
 function triggerDownload(blob,name){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.style.display='none';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}
 let selectedWordPdf=null,selectedJpgPdf=null,selectedImagesForPdf=[],selectedFormatImage=null;
 $('pdf-word-input').onchange=e=>{selectedWordPdf=e.target.files[0]||null;$('pdf-word-convert').disabled=!selectedWordPdf;setConvertStatus('pdf-word-status',selectedWordPdf?'Selected: '+selectedWordPdf.name+' · Click Convert & Download Word.':'Choose a PDF file.')};
-function xmlEscape(value){return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;')}
-function pdfPageText(items){
- const lines=[];
- for(const item of items){const value=(item.str||'').trim();if(!value)continue;const y=Math.round((item.transform&&item.transform[5]||0)*2)/2;let line=lines.find(x=>Math.abs(x.y-y)<2);if(!line){line={y,text:''};lines.push(line)}line.text+=(line.text?' ':'')+value}
- return lines.sort((a,b)=>b.y-a.y).map(x=>x.text).filter(Boolean);
-}
 async function makeVisualDocx(pages){
- if(!window.JSZip)throw Error('Document packaging library did not load. Refresh and try again.');
+ if(!window.JSZip)throw Error('Word document library did not load. Refresh the page and try again.');
  const zip=new JSZip(),body=[],rels=[];
  pages.forEach((p,i)=>{
-  const n=i+1,media='image'+n+'.png',rid='rIdImg'+n;
+  const n=i+1,media='page-'+n+'.png',rid='rIdPage'+n;
   zip.folder('word').folder('media').file(media,p.base64,{base64:true});
   rels.push('<Relationship Id="'+rid+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/'+media+'"/>');
-  const ratio=Math.min(((11906-720)*635)/p.width,((16838-720)*635)/p.height),cx=Math.round(p.width*ratio),cy=Math.round(p.height*ratio);
+  const availableWidth=(11906-720)*635,availableHeight=(16838-720)*635;
+  const fit=Math.min(availableWidth/p.width,availableHeight/p.height);
+  const cx=Math.round(p.width*fit),cy=Math.round(p.height*fit);
   if(i>0)body.push('<w:p><w:r><w:br w:type="page"/></w:r></w:p>');
-  body.push('<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="0"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="'+cx+'" cy="'+cy+'"/><wp:docPr id="'+n+'" name="Original PDF page '+n+'"/><wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="'+n+'" name="'+media+'"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="'+rid+'"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>');
+  body.push('<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="0"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="'+cx+'" cy="'+cy+'"/><wp:docPr id="'+n+'" name="PDF page '+n+'"/><wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="'+n+'" name="'+media+'"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="'+rid+'"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>');
  });
  zip.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
  zip.folder('_rels').file('.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');
@@ -137,7 +133,32 @@ async function makeVisualDocx(pages){
  zip.folder('word').folder('_rels').file('document.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+rels.join('')+'</Relationships>');
  return zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',compression:'DEFLATE'});
 }
-$('pdf-word-convert').onclick=async()=>{const f=selectedWordPdf;if(!f)return;const b=$('pdf-word-convert');b.disabled=true;try{setConvertStatus('pdf-word-status','Rendering the original PDF pages in high quality…');const pdf=await openPdfFile(f),pages=[];for(let p=1;p<=pdf.numPages;p++){setConvertStatus('pdf-word-status','Processing page '+p+' of '+pdf.numPages+'…');const page=await pdf.getPage(p),viewport=page.getViewport({scale:2.2}),canvas=document.createElement('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;const data=canvas.toDataURL('image/png').split(',')[1];pages.push({base64:data,width:canvas.width,height:canvas.height});canvas.width=canvas.height=1}setConvertStatus('pdf-word-status','Creating a Word document that matches the PDF pages…');const blob=await makeVisualDocx(pages);if(!blob||blob.size<500)throw Error('The Word file could not be created. Try another PDF.');triggerDownload(blob,safeBaseName(f.name)+'.docx');setConvertStatus('pdf-word-status','✓ Word file ready: one high-quality Word page for each original PDF page. No extra text pages.');log('PDF converted to Word',f.name)}catch(err){console.error(err);setConvertStatus('pdf-word-status','Could not convert: '+err.message)}finally{b.disabled=!selectedWordPdf}};
+$('pdf-word-convert').onclick=async()=>{
+ const f=selectedWordPdf;if(!f)return;
+ const b=$('pdf-word-convert');b.disabled=true;
+ try{
+  if(f.type!=='application/pdf'&&!/\.pdf$/i.test(f.name))throw Error('Please choose a PDF file.');
+  if(f.size>50*1024*1024)throw Error('This free browser converter supports PDFs up to 50 MB.');
+  setConvertStatus('pdf-word-status','Opening your PDF…');
+  const pdf=await openPdfFile(f),pages=[];
+  for(let p=1;p<=pdf.numPages;p++){
+   setConvertStatus('pdf-word-status','Converting page '+p+' of '+pdf.numPages+'…');
+   const page=await pdf.getPage(p),viewport=page.getViewport({scale:2.5}),canvas=document.createElement('canvas');
+   canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);
+   await page.render({canvasContext:canvas.getContext('2d',{alpha:false}),viewport,background:'#ffffff'}).promise;
+   const data=canvas.toDataURL('image/png').split(',')[1];
+   pages.push({base64:data,width:canvas.width,height:canvas.height});
+   canvas.width=canvas.height=1;
+  }
+  setConvertStatus('pdf-word-status','Building your A4 Word document…');
+  const blob=await makeVisualDocx(pages);
+  if(!blob||blob.size<500)throw Error('The Word file could not be created. Please try another PDF.');
+  triggerDownload(blob,safeBaseName(f.name)+'.docx');
+  setConvertStatus('pdf-word-status','✓ Converted! '+pdf.numPages+' A4 Word page(s) are ready in your Downloads.');
+  log('PDF converted to Word',f.name+' · '+pdf.numPages+' A4 pages');
+ }catch(err){console.error(err);setConvertStatus('pdf-word-status','Could not convert: '+err.message)}
+ finally{b.disabled=!selectedWordPdf}
+};
 $('pdf-jpg-input').onchange=e=>{selectedJpgPdf=e.target.files[0]||null;$('pdf-jpg-convert').disabled=!selectedJpgPdf;setConvertStatus('pdf-jpg-status',selectedJpgPdf?'Selected: '+selectedJpgPdf.name+' · All pages will be packed into one ZIP.':'Choose a PDF file.')};
 $('pdf-jpg-convert').onclick=async()=>{const f=selectedJpgPdf;if(!f)return;const b=$('pdf-jpg-convert');b.disabled=true;try{if(!window.JSZip)throw Error('ZIP library did not load. Check your internet connection and refresh.');setConvertStatus('pdf-jpg-status','Opening PDF…');const pdf=await openPdfFile(f),zip=new JSZip();for(let p=1;p<=pdf.numPages;p++){setConvertStatus('pdf-jpg-status','Converting page '+p+' of '+pdf.numPages+'…');const page=await pdf.getPage(p),viewport=page.getViewport({scale:2.2}),canvas=document.createElement('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.95));if(!blob)throw Error('Could not create JPG for page '+p);zip.file(safeBaseName(f.name)+'-page-'+p+'.jpg',blob);canvas.width=canvas.height=1}setConvertStatus('pdf-jpg-status','Preparing ZIP download…');const out=await zip.generateAsync({type:'blob'});triggerDownload(out,safeBaseName(f.name)+'-jpg-pages.zip');setConvertStatus('pdf-jpg-status','✓ '+pdf.numPages+' JPG page(s) downloaded together as a ZIP.');log('PDF converted to JPG',f.name+' · '+pdf.numPages+' pages')}catch(err){console.error(err);setConvertStatus('pdf-jpg-status','Could not convert: '+err.message)}finally{b.disabled=!selectedJpgPdf}};
 $('image-pdf-input').onchange=e=>{selectedImagesForPdf=[...e.target.files];$('image-pdf-convert').disabled=!selectedImagesForPdf.length;setConvertStatus('image-pdf-status',selectedImagesForPdf.length?selectedImagesForPdf.length+' image(s) selected · Click Convert & Download PDF.':'Choose one or more images.')};
