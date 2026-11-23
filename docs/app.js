@@ -41,7 +41,8 @@ function relevantContext(ds,query){
  return selected.slice(0,9).map((x,i)=>({text:x.s,name:x.name,source:i+1}));
 }
 async function generateLocalAnswer(query,ds){
- let system='You are IntelliDoc, a warm, helpful and thoughtful AI friend. Talk naturally, be friendly and clear, and explain difficult ideas in simple language. Answer general questions using your knowledge. If a request is ambiguous, ask one short clarifying question. Do not claim to have searched the internet or accessed anything outside this chat.';
+ const langChoice=$('reply-language')?.value||'auto';const answerLang=langChoice==='kn'?'Kannada':langChoice==='en'?'English':/[ಅ-ಹ]/.test(query)?'Kannada':'the same language the user used (English or Kannada; if they mix both, naturally mix both).';
+ let system='You are IntelliDoc, a warm, friendly, patient AI companion. Be conversational like a helpful human friend, not a formal robot. Reply in '+answerLang+'. If the user uses Kannada, reply in natural, simple Kannada script; if they use English, reply in simple English; if they mix Kannada and English, mirror that mix naturally. Keep explanations beginner-friendly, use short paragraphs and examples when useful, and be kind without overdoing emojis. Understand Kannada questions and answer them directly. Do not translate everything unless asked. Answer general questions using your knowledge. If a request is ambiguous, ask only one short clarifying question. Do not claim to have searched the internet or accessed anything outside this chat.';
  let sources=[];
  if(ds.length){
   sources=relevantContext(ds,query);
@@ -96,6 +97,7 @@ async function ask(q){
  }
  history.scrollTop=history.scrollHeight;$('question').value='';$('ask-btn').disabled=false;log('Assistant message',query);
 }
+const replyLanguage=$('reply-language');if(replyLanguage){replyLanguage.value=localStorage.getItem('intellidoc-reply-language')||'auto';replyLanguage.onchange=()=>localStorage.setItem('intellidoc-reply-language',replyLanguage.value)}
 $('ask-btn').onclick=()=>ask();$('question').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))ask()});document.querySelectorAll('[data-prompt]').forEach(b=>b.onclick=()=>ask(b.dataset.prompt));
 $('run-summary').onclick=()=>{const ds=scoped('summary-scope');if(!ds.length)return toast('Upload a document first.');$('summary-results').innerHTML=ds.map(d=>{const ranked=sentences(d.text).map((s,i)=>({s,i,n:score(s,d.text.slice(0,1800))})).sort((a,b)=>b.n-a.n).slice(0,6).sort((a,b)=>a.i-b.i);return '<article class="result-card"><h3>'+esc(d.name)+'</h3><div class="result-meta">'+d.words.toLocaleString()+' words · '+ranked.length+' key sentences selected</div>'+ranked.map(x=>'<p>• '+esc(x.s)+'</p>').join('')+'</article>'}).join('');log('Summary generated',ds.length+' document(s)');toast('Summary ready')}
 function shingles(t){const w=words(t),s=new Set();for(let i=0;i<w.length-2;i++)s.add(w.slice(i,i+3).join(' '));return s}function similarity(a,b){const A=shingles(a),B=shingles(b);let n=0;A.forEach(x=>{if(B.has(x))n++});return n/(A.size+B.size-n||1)}
