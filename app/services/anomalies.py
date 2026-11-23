@@ -18,7 +18,7 @@ def inspect_documents(documents: list) -> list[dict]:
             flags.append({"code": "unusually_long", "severity": "low", "message": "This document is much longer than the library median."})
         if len(text) > 100 and len(set(text)) <= 4:
             flags.append({"code": "low_text_variety", "severity": "medium", "message": "The text contains very few distinct characters; extraction may be corrupted."})
-        if re.search(r"(.)\\1{24,}", text):
+        if re.search(r"(.)\1{24,}", text):
             flags.append({"code": "repeated_character_run", "severity": "medium", "message": "A long repeated-character sequence was found."})
         if flags:
             findings.append({
