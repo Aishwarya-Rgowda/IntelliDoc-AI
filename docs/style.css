@@ -126,3 +126,23 @@ html{min-height:100%;overflow-y:auto;scroll-behavior:smooth}body{min-height:100v
 #page-converter .converter-card.tool-open .tool-launch{display:none}
 @media(max-width:950px){#page-converter .converter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){#page-converter .converter-grid{grid-template-columns:1fr}#page-converter .toolbox-controls{padding:13px 10px}#page-converter .page-heading h1{font-size:26px}#page-converter .converter-card{min-height:175px}#page-converter .converter-card.tool-open{grid-column:1;padding:19px}}
+
+/* Friendly file-format and size explainer */
+#page-converter .format-guide{margin:22px 0 15px;padding:23px;border:1px solid #e8e7f4;border-radius:16px;background:linear-gradient(135deg,#fff 0%,#f8f7ff 58%,#f4faff 100%)}
+#page-converter .format-guide-head{display:flex;align-items:center;gap:13px;margin-bottom:18px}
+#page-converter .format-guide-head>span{width:44px;height:44px;display:grid;place-items:center;border-radius:13px;background:#eeebff;font-size:22px}
+#page-converter .format-guide-head h2{margin:0 0 5px;font:800 17px Manrope;color:#30364b}
+#page-converter .format-guide-head p{margin:0;color:#8c93a3;font-size:10px}
+#page-converter .format-guide-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+#page-converter .format-guide-grid article{padding:14px;border:1px solid #ecebf4;border-radius:11px;background:#fff}
+#page-converter .format-guide-grid article:nth-child(3n+1){border-top:3px solid #8b7be7}
+#page-converter .format-guide-grid article:nth-child(3n+2){border-top:3px solid #65a9e4}
+#page-converter .format-guide-grid article:nth-child(3n){border-top:3px solid #62bd9a}
+#page-converter .format-guide-grid article>b{font-size:12px;color:#424960}
+#page-converter .format-guide-grid article p{margin:8px 0 0;color:#81899a;font-size:10px;line-height:1.75}
+#page-converter .format-guide-grid article p strong{color:#5d56a4}
+#page-converter .format-guide-size{margin-top:12px;padding:15px 16px;border-radius:11px;background:#fff5e9;border:1px solid #f5e6d3}
+#page-converter .format-guide-size b{font-size:11px;color:#98672e}
+#page-converter .format-guide-size p{margin:6px 0 0;font-size:10px;line-height:1.7;color:#8b795f}
+@media(max-width:850px){#page-converter .format-guide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){#page-converter .format-guide{padding:16px}#page-converter .format-guide-grid{grid-template-columns:1fr}#page-converter .format-guide-head h2{font-size:15px}}
