@@ -28,3 +28,26 @@
 /* Bilingual friendly chat polish */
 .chat-header{background:linear-gradient(100deg,#fff,#fbfaff)}.chat-header small{font-size:9px}.local-ai-banner{background:linear-gradient(105deg,#f3f0ff,#f0f8ff)}.welcome-message p{line-height:1.9}.suggestion-grid button{min-height:48px;font-size:9px;border-radius:10px}.chat-bubble{font-size:11px;line-height:1.9}.chat-bubble.assistant{font-size:11px}.chat-composer>small{line-height:1.7}.chat-controls select:focus,.composer-row:focus-within{border-color:#a69be8;box-shadow:0 0 0 3px #eeeaff}
 @media(max-width:520px){.chat-controls{align-items:stretch}.chat-controls label{width:100%}.chat-controls select{flex:1;min-width:0}}
+
+
+/* Simple iLovePDF-inspired PDF-to-Word workspace */
+.pdfword-workspace{max-width:820px;margin:8px auto 22px;padding:42px 34px 30px;text-align:center;border:1px solid #e8e7f5;background:linear-gradient(145deg,#fff 0%,#f8f7ff 100%);box-shadow:0 16px 45px rgba(48,39,110,.08);border-radius:22px}
+.pdfword-mark{width:62px;height:62px;margin:0 auto 14px;display:grid;place-items:center;border-radius:18px;background:linear-gradient(135deg,#6558e8,#8b5cf6);color:#fff;font-size:30px;font-weight:800;box-shadow:0 9px 22px rgba(101,88,232,.25)}
+.pdfword-workspace h2{font-size:27px;margin:0 0 8px;color:#252344}
+.pdfword-lead{margin:0 auto 26px;color:#6e6b83;max-width:550px;line-height:1.6}
+.pdfword-upload{min-height:190px;border:2px dashed #aaa2f0;border-radius:17px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:.2s}
+.pdfword-upload:hover{border-color:#6558e8;background:#faf9ff;transform:translateY(-1px)}
+.pdfword-upload-icon{width:45px;height:45px;border-radius:14px;background:#eeeaff;color:#6558e8;font-size:30px;line-height:45px}
+.pdfword-upload strong{font-size:19px;color:#38325f}
+.pdfword-upload small{color:#88849b}
+.pdfword-upload input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.pdfword-status{min-height:25px;margin:15px auto 12px;color:#68647c}
+.pdfword-convert{width:min(100%,360px);min-height:58px;margin:0 auto;border:0;border-radius:13px;background:linear-gradient(100deg,#6558e8,#8a4fe8);box-shadow:0 8px 20px rgba(101,88,232,.24);font-size:17px;font-weight:750;display:flex;align-items:center;justify-content:center;gap:16px}
+.pdfword-convert span{font-size:23px}
+.pdfword-convert:disabled{opacity:.45;box-shadow:none;cursor:not-allowed}
+.pdfword-steps{display:flex;justify-content:center;align-items:center;gap:15px;flex-wrap:wrap;margin:28px auto 0;color:#77738b}
+.pdfword-steps div{display:flex;align-items:center;gap:8px;font-size:13px}
+.pdfword-steps i{font-style:normal;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:#eeebff;color:#6558e8;font-weight:700}
+.pdfword-privacy{max-width:820px;margin:0 auto;padding:17px 20px;display:flex;flex-direction:column;gap:6px;border-radius:14px;background:#f7f8fc;color:#626078;font-size:13px;line-height:1.55}
+.pdfword-privacy b{color:#38354f;font-size:14px}
+@media(max-width:640px){.pdfword-workspace{padding:28px 16px 22px}.pdfword-workspace h2{font-size:23px}.pdfword-upload{min-height:160px}.pdfword-steps{gap:8px}.pdfword-steps div{font-size:11px}}
