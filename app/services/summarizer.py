@@ -1,7 +1,7 @@
 import re
 from collections import Counter
 
-from app.services.retrieval import STOP_WORDS, terms
+from app.services.retrieval import terms
 
 
 def summarize_text(text: str, max_sentences: int = 5) -> tuple[str, int, int]:
