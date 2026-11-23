@@ -1,7 +1,7 @@
 const $=id=>document.getElementById(id);const docs=[];const activity=[];let toastTimer;
 let localAIEngine=null,localAILoading=false;const conversation=[];const LOCAL_MODEL="Qwen2.5-0.5B-Instruct-q4f16_1-MLC";const stopWords=new Set("the and for that with this from are was were have has had into your you our their they them then than also not but all can will would should could about there here what when where which who how why its it's".split(" "));
 if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-const words=t=>(t.toLowerCase().match(/[a-z0-9]{2,}/g)||[]).filter(w=>!stopWords.has(w));const countWords=t=>(t.match(/\\b[\\p{L}\\p{N}]+(?:['’][\\p{L}\\p{N}]+)?\\b/gu)||[]).length;const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const sentences=t=>(t.match(/[^.!?\n]+[.!?]?/g)||[]).map(s=>s.trim()).filter(s=>s.length>20);const score=(s,q)=>{const set=new Set(words(s));return words(q).reduce((n,w)=>n+(set.has(w)?1:0),0)};
+const words=t=>(t.toLowerCase().match(/[a-z0-9]{2,}/g)||[]).filter(w=>!stopWords.has(w));const countWords=t=>(t.match(/\b[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)?\b/gu)||[]).length;const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const sentences=t=>(t.match(/[^.!?\n]+[.!?]?/g)||[]).map(s=>s.trim()).filter(s=>s.length>20);const score=(s,q)=>{const set=new Set(words(s));return words(q).reduce((n,w)=>n+(set.has(w)?1:0),0)};
 function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2600)}
 function log(action,detail){activity.unshift({action,detail,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})});renderActivity();$('metric-activity').textContent=activity.length}
 function go(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.page===page));const btn=document.querySelector('.nav-item[data-page="'+page+'"]');$('crumb-current').textContent=btn?btn.textContent.trim():page;$('sidebar').classList.remove('open');window.scrollTo({top:0,behavior:'smooth'})}
@@ -66,8 +66,11 @@ async function ask(q){
  const ds=scoped('doc-scope'),lower=query.toLowerCase(),history=$('chat-history');
  if(history.querySelector('.welcome-message'))history.innerHTML='';
  history.insertAdjacentHTML('beforeend','<div class="chat-bubble user">'+esc(query)+'</div>');
- const isPages=/how many pages|page count|number of pages|pages does|pages in/i.test(lower);
- if(isPages&&ds.length){
+ const isPages=/how many pages|page count|number of pages|pages does|pages in/i.test(lower);const isWordCount=/(how many|number of|total)\s+words?|word\s+count|count\s+the\s+words?/i.test(lower);
+ if(isWordCount&&ds.length){
+  const total=ds.reduce((n,d)=>n+d.words,0);const rows=ds.map(d=>'<p><b>'+esc(d.name)+'</b>: '+d.words.toLocaleString()+' words</p>').join('');
+  history.insertAdjacentHTML('beforeend','<div class="chat-bubble assistant">'+rows+(ds.length>1?'<p><b>Total: '+total.toLocaleString()+' words</b></p>':'')+'<span class="source">DOCUMENT DETAILS · Counted directly from the extracted document text.</span></div>');
+ }else if(isPages&&ds.length){
   const rows=ds.map(d=>'<p><b>'+esc(d.name)+'</b>: '+(d.pageCount===null?'Page count is available only for PDF files.':d.pageCount+' pages')+'</p>').join('');
   history.insertAdjacentHTML('beforeend','<div class="chat-bubble assistant">'+rows+'<span class="source">DOCUMENT DETAILS · Page counts are read directly from each PDF.</span></div>');
  }else if(localAIEngine){
