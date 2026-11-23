@@ -25,7 +25,6 @@ def summarize_text(text: str, max_sentences: int = 5) -> tuple[str, int, int]:
         for index, sentence in enumerate(sentences):
             sentence_terms = terms(sentence)
             score = sum(frequencies[word] / max_frequency for word in sentence_terms)
-            score = score / max(len(sentence_terms), 1)
             scored.append((score, index, sentence))
         selected = sorted(scored, key=lambda item: (-item[0], item[1]))[:max_sentences]
         chosen = [sentence for _, _, sentence in sorted(selected, key=lambda item: item[1])]
