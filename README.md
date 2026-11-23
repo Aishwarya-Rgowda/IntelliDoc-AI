@@ -49,6 +49,16 @@ The backend tries normal PDF text extraction first and uses OCR only when no tex
 pytest -q
 ```
 
+## Optional semantic search
+
+The default mode uses lightweight keyword matching and does not download an AI model. To enable local sentence-embedding similarity, install the optional package set:
+
+```powershell
+pip install -r requirements-ai.txt
+```
+
+Then set `ENABLE_SEMANTIC_SEARCH=true` in your `.env` file and restart the server. The first semantic query downloads the `all-MiniLM-L6-v2` model and may take longer. Model inference runs locally after download. If the optional dependency or model is unavailable, retrieval falls back to keyword matching. This is semantic passage retrieval; the current answer is still extractive and does not generate new answers with an LLM.
+
 ## API
 | Method | Endpoint | Purpose |
 |---|---|---|
@@ -74,7 +84,7 @@ The educational prototype stores the access token in localStorage. A production 
 
 ## Current limitations / roadmap
 - Scanned PDF OCR is available as an optional local feature. Install the packages in `requirements-ocr.txt` and the Tesseract application for your operating system; OCR is not included in the default install.
-- Q&A currently retrieves relevant passages; it does not yet use embeddings, an LLM or a full RAG pipeline.
-- Next: semantic embeddings/vector search, grounded RAG, summarization, duplicate/anomaly detection, automated tests, database migrations and deployment hardening.
+- Optional local sentence embeddings improve passage retrieval when enabled; full LLM-generated RAG answers are not implemented yet.
+- Next: persistent vector indexing, grounded LLM RAG, summarization, duplicate/anomaly detection, automated tests, database migrations and deployment hardening.
 
 Never commit your real .env, uploaded documents, database, API keys or production secrets. Uploaded files are not served as public static files.
