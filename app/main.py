@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.config import APP_NAME, BASE_DIR, UPLOAD_DIR, SECRET_KEY
 from app.database import Base, engine
-from app.routers import auth, documents, questions, summaries
+from app.routers import auth, documents, questions, summaries, duplicates
 
 Base.metadata.create_all(bind=engine)
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -14,6 +14,7 @@ app.include_router(auth.router)
 app.include_router(documents.router)
 app.include_router(questions.router)
 app.include_router(summaries.router)
+app.include_router(duplicates.router)
 
 @app.get("/api/health", tags=["System"])
 def health():
