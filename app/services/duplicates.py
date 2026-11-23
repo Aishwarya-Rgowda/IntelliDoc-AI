@@ -1,3 +1,4 @@
+from collections import Counter
 import hashlib
 import re
 
@@ -12,21 +13,28 @@ def fingerprint(text: str) -> str:
     return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
 
 
-def _shingles(text: str, size: int = 5) -> set[tuple[str, ...]]:
+def _shingles(text: str, size: int = 5) -> Counter[tuple[str, ...]]:
+    """Keep shingle frequencies so repeated paragraphs are not under-counted."""
     words = normalize_text(text).split()
     if not words:
-        return set()
+        return Counter()
     if len(words) < size:
-        return {tuple(words)}
-    return {tuple(words[index:index + size]) for index in range(len(words) - size + 1)}
+        return Counter({tuple(words): 1})
+    return Counter(
+        tuple(words[index:index + size])
+        for index in range(len(words) - size + 1)
+    )
 
 
 def similarity(first: str, second: str) -> float:
-    """Return shingle Jaccard similarity (0..1), a lightweight near-duplicate signal."""
+    """Return frequency-aware shingle overlap (0..1), a lightweight duplicate signal."""
     left, right = _shingles(first), _shingles(second)
     if not left or not right:
         return 0.0
-    return len(left & right) / len(left | right)
+
+    shared = sum((left & right).values())
+    total = max(sum(left.values()), sum(right.values()))
+    return shared / total if total else 0.0
 
 
 def find_duplicates(documents, threshold: float = 0.85) -> list[dict]:
