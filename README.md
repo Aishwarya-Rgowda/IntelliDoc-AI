@@ -87,9 +87,11 @@ Set `OPENAI_MODEL=gpt-4.1-mini` (or another model available to your API account)
 | GET | /api/documents/duplicates | Find exact and near-duplicate documents in your library |
 | GET | /api/documents/anomalies | Inspect document extraction quality |
 | GET | /api/admin/dashboard | Admin-only usage overview |
+| GET | /api/documents/anomalies | Inspect document extraction quality |
+| GET | /api/admin/dashboard | Admin-only usage overview |
 | GET | /api/health | Health check |
 
-Protected endpoints require `Authorization: Bearer <token>`.\n\n## Admin dashboard\nSet `ADMIN_EMAILS` in `.env` to a comma-separated allowlist of account email addresses. Only those authenticated accounts can call `/api/admin/dashboard`. If the setting is empty, no account has admin access. This is an explicit allowlist for the prototype; do not treat self-registration as granting admin rights.
+Protected endpoints require `Authorization: Bearer <token>`.\n\n## Admin dashboard\nSet `ADMIN_EMAILS` in `.env` to a comma-separated allowlist of account email addresses. Only those authenticated accounts can call `/api/admin/dashboard`. If the setting is empty, no account has admin access. Self-registration never grants admin rights.\n\n## Admin dashboard\nSet `ADMIN_EMAILS` in `.env` to a comma-separated allowlist of account email addresses. Only those authenticated accounts can call `/api/admin/dashboard`. If the setting is empty, no account has admin access. This is an explicit allowlist for the prototype; do not treat self-registration as granting admin rights.
 
 ## Authentication design
 1. Registration hashes the password using Argon2 before saving it.
