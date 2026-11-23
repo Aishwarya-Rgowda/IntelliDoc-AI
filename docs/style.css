@@ -21,3 +21,6 @@
 .send-btn:disabled,.primary-btn:disabled{opacity:.55;cursor:wait;transform:none}
 .chat-bubble.assistant .source{white-space:normal}
 @media(max-width:520px){.local-ai-banner{align-items:flex-start;flex-direction:column}.local-ai-banner .primary-btn{width:100%}}
+
+/* Live dashboard details */
+.live-meta{display:flex;align-items:center;gap:8px;margin-top:12px;color:#9299a8;font-size:9px}.live-meta b{font-size:8px;letter-spacing:1px;color:#299b78}.live-dot{width:7px;height:7px;border-radius:50%;background:#35b987;box-shadow:0 0 0 4px #e8f7f0;animation:livePulse 1.8s infinite}.live-divider{color:#c5c9d2}@keyframes livePulse{50%{box-shadow:0 0 0 7px #e8f7f000}}@media(max-width:520px){.live-meta{flex-wrap:wrap;gap:7px}}
