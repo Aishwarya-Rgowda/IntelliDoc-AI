@@ -108,3 +108,22 @@ The educational prototype stores the access token in localStorage. A production 
 - Next: persistent vector indexing, abstractive summarization, anomaly detection, broader automated tests, database migrations and deployment hardening.
 
 Never commit your real .env, uploaded documents, database, API keys or production secrets. Uploaded files are not served as public static files.
+
+## Deploy the full application
+
+The full authenticated application is a FastAPI service. GitHub Pages can host only the static browser demo in `docs/`; it cannot run the API, database or private document storage. A Render Blueprint is included in `render.yaml` and a production container is defined in `Dockerfile`.
+
+### Deploy with Render
+1. Push this repository to GitHub (the default branch is `main`).
+2. Sign in to Render and choose **New → Blueprint**.
+3. Connect this repository and allow Render to read `render.yaml`.
+4. Review the service named `intellidoc-ai-api` and create it. Render generates the production `SECRET_KEY`; the blueprint mounts a persistent disk at `/var/data` for the SQLite database and uploaded files.
+5. Wait for the deploy to finish, then open `https://YOUR-SERVICE.onrender.com/api/health`. A healthy response contains `"status":"ok"`.
+6. Open the service root URL to use the full sign-in/register application. API documentation is available at `/docs`.
+
+The included Blueprint uses a paid Render Starter service and a 1 GB persistent disk so uploads and the SQLite database survive restarts/redeploys. Hosting charges are set by Render and are not activated by pushing code. Do not paste API keys into source files. To enable generated grounded answers, add `OPENAI_API_KEY` and optionally `OPENAI_MODEL` as private environment variables in the hosting dashboard; usage may incur API charges. Semantic retrieval can be enabled with `ENABLE_SEMANTIC_SEARCH=true`, but the embedding model adds memory/startup requirements.
+
+### Deployment boundaries
+- **GitHub Pages demo:** `https://aishwarya-rgowda.github.io/IntelliDoc-AI/` — static browser-only demo; data is temporary in that browser session.
+- **Full application:** the Render service — authentication, server-side extraction, account-scoped document storage, API-backed retrieval, summaries, duplicate checks and quality findings.
+- The full backend is not live until the Blueprint is deployed in an account with a configured billing method. No hosting account or paid service is created automatically by a GitHub push.
