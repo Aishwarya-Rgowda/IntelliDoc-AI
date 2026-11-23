@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.config import APP_NAME, BASE_DIR, UPLOAD_DIR, SECRET_KEY
 from app.database import Base, engine
-from app.routers import auth, documents, questions
+from app.routers import auth, documents, questions, summaries
 
 Base.metadata.create_all(bind=engine)
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -13,6 +13,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["http://127.0.0.1:8000", "http
 app.include_router(auth.router)
 app.include_router(documents.router)
 app.include_router(questions.router)
+app.include_router(summaries.router)
 
 @app.get("/api/health", tags=["System"])
 def health():
