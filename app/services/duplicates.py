@@ -4,7 +4,7 @@ import re
 
 def normalize_text(text: str) -> str:
     """Normalize extracted text so formatting differences do not hide duplicates."""
-    return " ".join(re.findall(r"\\w+", (text or "").casefold()))
+    return " ".join(re.findall(r"\w+", (text or "").casefold()))
 
 
 def fingerprint(text: str) -> str:
