@@ -8,7 +8,9 @@ A learning-friendly document intelligence web application built with FastAPI, SQ
 - Registration and login with Argon2 password hashing
 - Signed JWT bearer tokens with expiry
 - User-scoped document access
-- PDF, DOCX and TXT text extraction\n- Optional OCR fallback for scanned PDFs (requires Tesseract plus `pip install -r requirements-ocr.txt`)\n- Initial retrieval-service unit tests and GitHub Actions test workflow
+- PDF, DOCX and TXT text extraction
+- Optional OCR fallback for scanned PDFs (requires Tesseract plus `pip install -r requirements-ocr.txt`)
+- Initial retrieval-service unit tests and GitHub Actions test workflow
 - File extension and size checks; random storage filenames
 - Keyword-based passage retrieval with source references
 - Responsive browser interface and interactive API docs
@@ -31,7 +33,23 @@ uvicorn app.main:app --reload
 
 Open http://127.0.0.1:8000. API documentation: http://127.0.0.1:8000/docs.
 
-## Optional OCR for scanned PDFs\n\nInstall the system Tesseract OCR application first, then install the Python extras:\n\n```powershell\npip install -r requirements-ocr.txt\n```\n\nThe backend tries normal PDF text extraction first and uses OCR only when no text is found. OCR language defaults to the Tesseract installation defaults.\n\n## Run tests\n\n```powershell\npytest -q\n```\n\n## API
+## Optional OCR for scanned PDFs
+
+Install the system Tesseract OCR application first, then install the Python extras:
+
+```powershell
+pip install -r requirements-ocr.txt
+```
+
+The backend tries normal PDF text extraction first and uses OCR only when no text is found. OCR language defaults to the Tesseract installation defaults.
+
+## Run tests
+
+```powershell
+pytest -q
+```
+
+## API
 | Method | Endpoint | Purpose |
 |---|---|---|
 | POST | /api/auth/register | Create account |
@@ -57,6 +75,6 @@ The educational prototype stores the access token in localStorage. A production 
 ## Current limitations / roadmap
 - Scanned PDF OCR is available as an optional local feature. Install the packages in `requirements-ocr.txt` and the Tesseract application for your operating system; OCR is not included in the default install.
 - Q&A currently retrieves relevant passages; it does not yet use embeddings, an LLM or a full RAG pipeline.
-- Next: OCR, semantic embeddings/vector search, grounded RAG, summarization, duplicate/anomaly detection, automated tests, database migrations and deployment hardening.
+- Next: semantic embeddings/vector search, grounded RAG, summarization, duplicate/anomaly detection, automated tests, database migrations and deployment hardening.
 
 Never commit your real .env, uploaded documents, database, API keys or production secrets. Uploaded files are not served as public static files.
